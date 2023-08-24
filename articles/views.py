@@ -80,3 +80,23 @@ def delete(request, id):
     article.delete()
 
     return redirect('articles:index')
+
+def update(request, id):
+    article= Article.objects.get(id=id)
+
+    if request.method == 'POST':
+        # request.POST: 새로운 데이터, instance=article은 기존 데이터
+        form = ArticleForm(request.POST, instance=article)
+
+        if form.is_valid():
+            form.save()
+            return redirect('articles:detail', id=id)
+        
+    else:
+        form = ArticleForm(instance=article)
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'update.html', context)
